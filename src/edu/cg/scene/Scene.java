@@ -11,10 +11,7 @@ import java.util.concurrent.Future;
 
 import edu.cg.Logger;
 import edu.cg.UnimplementedMethodException;
-import edu.cg.algebra.Hit;
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Ray;
-import edu.cg.algebra.Vec;
+import edu.cg.algebra.*;
 import edu.cg.scene.camera.PinholeCamera;
 import edu.cg.scene.lightSources.Light;
 import edu.cg.scene.objects.Surface;
@@ -193,16 +190,21 @@ public class Scene {
 		resultSurface = hit.getSurface();
 		pNormal = hit.getNormalToSurface();
 		p = ray.getHittingPoint(hit);
+		Vec normToSurf = hit.getNormalToSurface();
 		lSum = ambient.mult(resultSurface.Ka());
-		//diffuse and specular calculations
+
+		//diffuse and specular calculations, shadows considered (using sj scalar).
 		double sj;
 		for(Light light: this.lightSources){
 			Ray toLight = light.rayToLight(p);
+			Vec lHat = Ops.reflect(toLight.direction(), normToSurf);
 			for(Surface s : this.surfaces){
 				sj = (light.isOccludedBy(s,toLight)) ? 0: 1;
-				Vec intense = light.intensity(p,toLight);
-				lSum.add(((resultSurface.Kd()).mult(intense).add((resultSurface.Ks()).mult(intense))).mult(sj));
+				if(sj == 0) break;
 			}
+
+			Vec intense = light.intensity(p,toLight);
+			lSum.add((((resultSurface.Kd()).mult(intense)).mult(normToSurf.dot(toLight.direction())).add(((resultSurface.Ks()).mult(intense)).mult(ray.direction().dot(lHat)))).mult(sj));
 
 		}
 		return lSum;
