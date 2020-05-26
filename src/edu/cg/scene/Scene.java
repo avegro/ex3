@@ -172,7 +172,6 @@ public class Scene {
 
 	private Vec calcColor(Ray ray, int recursionLevel) {
         Vec recReflect = new  Vec(0, 0, 0);
-		double minDist;
 		Hit surfHit;
 		Hit hit = null;
 		Surface resultSurface;
