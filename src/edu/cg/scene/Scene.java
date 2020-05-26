@@ -171,6 +171,7 @@ public class Scene {
 	}
 
 	private Vec calcColor(Ray ray, int recursionLevel) {
+        Vec recReflect = new  Vec(0, 0, 0);
 		double minDist;
 		Hit surfHit;
 		Hit hit = null;
@@ -187,6 +188,10 @@ public class Scene {
 			}
 			if(hit == null) hit = surfHit;
 		}
+		// Now we know what point and surface we're working with,
+        // so we define variables for the point we are getting the color from,
+        // the vector which is normal to the surface, and of course the surface we are working with.
+        // We also start the sum for the light intensity formula.
 		resultSurface = hit.getSurface();
 		pNormal = hit.getNormalToSurface();
 		p = ray.getHittingPoint(hit);
@@ -194,7 +199,9 @@ public class Scene {
 		lSum = ambient.mult(resultSurface.Ka());
 
 		//diffuse and specular calculations, shadows considered (using sj scalar).
-		double sj;
+		double sj = 1;
+		// Iterate over every light source and check if it's blocked. If it is, we will
+        // multiply the relevant diffuse/specular term by 0 as the light is not getting through.
 		for(Light light: this.lightSources){
 			Ray toLight = light.rayToLight(p);
 			Vec lHat = Ops.reflect(toLight.direction(), normToSurf);
@@ -202,11 +209,18 @@ public class Scene {
 				sj = (light.isOccludedBy(s,toLight)) ? 0: 1;
 				if(sj == 0) break;
 			}
-
+            // follow intensity formula
 			Vec intense = light.intensity(p,toLight);
-			lSum.add((((resultSurface.Kd()).mult(intense)).mult(normToSurf.dot(toLight.direction())).add(((resultSurface.Ks()).mult(intense)).mult(ray.direction().dot(lHat)))).mult(sj));
+			lSum = lSum.add((((resultSurface.Kd()).mult(intense)).mult(normToSurf.dot(toLight.direction())).add(((resultSurface.Ks()).mult(intense)).mult(ray.direction().neg().dot(lHat)))).mult(sj));
 
 		}
-		return lSum;
+		// Check if we have reached maximum depth.
+        if(recursionLevel > 0){
+            Ray nextRay = new Ray(p, Ops.reflect(ray.direction(),pNormal));
+            recReflect = calcColor(nextRay, --recursionLevel);
+        }
+        // Calculate sum and return appropriate color.
+		lSum = lSum.add(recReflect.mult(hit.getSurface().reflectionIntensity()));
+	    return lSum;
 	}
 }
