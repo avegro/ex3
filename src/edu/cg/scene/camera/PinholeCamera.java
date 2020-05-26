@@ -5,7 +5,9 @@ import edu.cg.algebra.Point;
 import edu.cg.algebra.Vec;
 
 public class PinholeCamera {
-	// TODO Add your fields
+	private transient int height = 200;
+	private transient int width = 200;
+	private transient double viewAngle = 90;
 
 	/**
 	 * Initializes a pinhole camera model with default resolution 200X200 (RxXRy)
@@ -31,7 +33,9 @@ public class PinholeCamera {
 	 * @param viewAngle - the view Angle.
 	 */
 	public void initResolution(int height, int width, double viewAngle) {
-		// TODO: init your fields
+		this.height = height;
+		this.width = width;
+		this.viewAngle = viewAngle;
 	}
 
 	/**

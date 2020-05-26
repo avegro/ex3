@@ -11,6 +11,7 @@ import java.util.concurrent.Future;
 
 import edu.cg.Logger;
 import edu.cg.UnimplementedMethodException;
+import edu.cg.algebra.Hit;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
@@ -172,9 +173,21 @@ public class Scene {
 		});
 	}
 
-	private Vec calcColor(Ray ray, int recusionLevel) {
-		// TODO: Implement this method.
-		// This is the recursive method in RayTracing.
+	private Vec calcColor(Ray ray, int recursionLevel) {
+		Surface surf;
+		double minDist;
+		Hit surfHit;
+		Hit hit = null;
+
+		for(int i = 0; i < this.surfaces.size(); ++i){
+			surf = surfaces.get(i);
+			surfHit = surf.intersect(ray);
+			if(surfHit != null){
+				surfHit.setSurface(surf);
+				if(surfHit.compareTo(hit) < 0) hit = surfHit;
+			}
+			if(hit == null) hit = surfHit;
+		}
 		throw new UnimplementedMethodException("calcColor");
 	}
 }
