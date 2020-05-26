@@ -180,6 +180,8 @@ public class Scene {
 		Surface resultSurface;
 		Vec pNormal, lSum;
 		Point p;
+		// First, we find the surface (location where the ray hits the nearest object)
+		// so that we can determine color based on the material, location etc.
 		for(Surface surf: this.surfaces){
 			surfHit = surf.intersect(ray);
 			if(surfHit != null){
@@ -193,7 +195,14 @@ public class Scene {
 		p = ray.getHittingPoint(hit);
 		lSum = ambient.mult(resultSurface.Ka());
 		//diffuse and specular calculations
+		double sj;
 		for(Light light: this.lightSources){
+			Ray toLight = light.rayToLight(p);
+			for(Surface s : this.surfaces){
+				sj = (light.isOccludedBy(s,toLight)) ? 0: 1;
+				Vec intense = light.intensity(p,toLight);
+				lSum.add(((resultSurface.Kd()).mult(intense).add((resultSurface.Ks()).mult(intense))).mult(sj));
+			}
 
 		}
 		return lSum;
