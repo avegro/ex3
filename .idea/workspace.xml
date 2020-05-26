@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f460371a-f27d-47ba-ada3-20a72cdd96b6" name="Default Changelist" comment="started implementing calcColor">
+    <list default="true" id="f460371a-f27d-47ba-ada3-20a72cdd96b6" name="Default Changelist" comment="update 1">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/edu/cg/scene/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/edu/cg/scene/Scene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/edu/cg/scene/camera/PinholeCamera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/edu/cg/scene/camera/PinholeCamera.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -33,14 +32,14 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="616" />
-          <entry key="txt" value="41" />
+          <entry key="java" value="900" />
+          <entry key="txt" value="49" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="616" />
-          <entry key="PLAIN_TEXT" value="41" />
+          <entry key="JAVA" value="900" />
+          <entry key="PLAIN_TEXT" value="49" />
         </counts>
       </usages-collector>
     </session>
@@ -50,8 +49,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/edu/cg/scene/Scene.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="91">
-              <caret line="176" column="20" lean-forward="true" selection-start-line="176" selection-start-column="20" selection-end-line="176" selection-end-column="20" />
+            <state relative-caret-position="384">
+              <caret line="198" column="20" selection-start-line="198" selection-start-column="20" selection-end-line="198" selection-end-column="20" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -89,7 +88,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/edu/cg/scene/objects/Sphere.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-179">
+            <state relative-caret-position="9">
               <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
             </state>
           </provider>
@@ -269,7 +268,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1590511341682" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1590512082199" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -314,6 +313,14 @@
       <option name="presentableId" value="Default" />
       <updated>1590497666814</updated>
     </task>
+    <task id="LOCAL-00001" summary="started implementing calcColor">
+      <created>1590511355267</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1590511355268</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -325,12 +332,12 @@
       <window_info id="UI Designer" />
       <window_info id="Capture Tool" />
       <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19497785" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19497785" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" weight="0.32916668" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" visible="true" weight="0.32916668" />
+      <window_info active="true" anchor="bottom" id="Messages" visible="true" weight="0.32916668" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32916668" />
@@ -354,7 +361,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="basic inits" />
     <MESSAGE value="started implementing calcColor" />
-    <option name="LAST_COMMIT_MESSAGE" value="started implementing calcColor" />
+    <MESSAGE value="update 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="update 1" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/edu/cg/UnimplementedMethodException.java">
@@ -396,13 +404,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="131">
           <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/edu/cg/scene/objects/Sphere.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-179">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -469,10 +470,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/edu/cg/scene/objects/Sphere.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/edu/cg/scene/Scene.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="176" column="20" lean-forward="true" selection-start-line="176" selection-start-column="20" selection-end-line="176" selection-end-column="20" />
+        <state relative-caret-position="384">
+          <caret line="198" column="20" selection-start-line="198" selection-start-column="20" selection-end-line="198" selection-end-column="20" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

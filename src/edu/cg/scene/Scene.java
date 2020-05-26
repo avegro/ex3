@@ -174,13 +174,13 @@ public class Scene {
 	}
 
 	private Vec calcColor(Ray ray, int recursionLevel) {
-		Surface surf;
 		double minDist;
 		Hit surfHit;
 		Hit hit = null;
-
-		for(int i = 0; i < this.surfaces.size(); ++i){
-			surf = surfaces.get(i);
+		Surface resultSurface;
+		Vec pNormal, lSum;
+		Point p;
+		for(Surface surf: this.surfaces){
 			surfHit = surf.intersect(ray);
 			if(surfHit != null){
 				surfHit.setSurface(surf);
@@ -188,6 +188,14 @@ public class Scene {
 			}
 			if(hit == null) hit = surfHit;
 		}
-		throw new UnimplementedMethodException("calcColor");
+		resultSurface = hit.getSurface();
+		pNormal = hit.getNormalToSurface();
+		p = ray.getHittingPoint(hit);
+		lSum = ambient.mult(resultSurface.Ka());
+		//diffuse and specular calculations
+		for(Light light: this.lightSources){
+
+		}
+		return lSum;
 	}
 }
