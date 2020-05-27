@@ -208,14 +208,15 @@ public class Scene {
 				sj = (light.isOccludedBy(s,toLight)) ? 0: 1;
 				if(sj == 0) break;
 			}
-            // follow intensity formula
+            // Follow intensity formula
 			Vec intense = light.intensity(p,toLight);
 			lSum = lSum.add((((resultSurface.Kd()).mult(intense)).mult(normToSurf.dot(toLight.direction())).add(((resultSurface.Ks()).mult(intense)).mult(ray.direction().neg().dot(lHat)))).mult(sj));
 
 		}
 		// Check if we have reached maximum depth.
+		// If not, move the ray forward by an extremely small amount and continue with the recursion.
         if(recursionLevel > 0){
-            Ray nextRay = new Ray(p, Ops.reflect(ray.direction(),pNormal));
+            Ray nextRay = new Ray(p.add(new Vec(0.00001)), Ops.reflect(ray.direction(),pNormal));
             recReflect = calcColor(nextRay, --recursionLevel);
         }
         // Calculate sum and return appropriate color.
