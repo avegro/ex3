@@ -63,14 +63,12 @@ public class PinholeCamera {
 	 * @return the middle point of the pixel (x,y) in the model coordinates.
 	 */
 	public Point transform(int x, int y) {
-		// We add 0.5 because we will pass the ray through the center of each pixel.
 		try{
+			// we use equation given in lecture video to convert points through finding the center point using the towards vector.
 			Point center = cameraPosition.add(towardsVec.mult(distanceToPlain));
 			Vec vRight = towardsVec.cross(upVec).normalize();
-			Vec notUp = vRight.cross(towardsVec).normalize();
-			Point point = center.add(vRight.mult((x - Math.floor(width/2.0))*pixelWidth)).add(upVec.mult(((0.0 - y) + Math.floor(height/2.0))*pixelWidth));
+			return center.add(vRight.mult((x - Math.floor(width/2.0))*pixelWidth)).add(upVec.mult(((0.0 - y) + Math.floor(height/2.0))*pixelWidth));
 
-			return point;
 		}
 		catch(Exception e){
 			throw new RuntimeException("Function failed: PinholeCamera/transform  ");

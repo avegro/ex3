@@ -57,6 +57,13 @@ public class CutoffSpotlight extends PointLight {
 	@Override
 	public Vec intensity(Point hittingPoint, Ray rayToLight) {
 		double dist = hittingPoint.dist(position);
+		Vec v = direction.normalize().neg();
+		double cos =v.dot(rayToLight.direction().normalize());
+		double acos = Math.acos(cos);
+		double angle = Math.toDegrees((acos));
+		if (angle > cutoffAngle || cos < Ops.epsilon){
+			return  new Vec (0);
+		}
 		double decay = kq*(Math.pow(dist,2)) + kl*dist + kc;
 		return intensity.mult(Math.cos(Math.toRadians(cutoffAngle)) ).mult(1/decay) ;
 	}

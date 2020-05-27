@@ -54,20 +54,20 @@ public class Sphere extends Shape {
 		// now that we've calculated the two t values, we find the points on the sphere itself that are intersected with:
 		Point p = ray.source().add(normalizeDir.mult(t0));
 		Point p1 = ray.source().add(normalizeDir.mult(t1));
-		Vec norm = p1.sub(this.center).normalize();
+		Vec norm2 = p1.sub(this.center).normalize();
+		Vec norm1 = p.sub(this.center).normalize();
 		// we calculate the nearest intersection by intersection distances
 		double pDist = p.sub(ray.source()).length();
 		double p1Dist = p1.sub(ray.source()).length();
 		// we check to avoid double calculation/errors
 		if (pDist > p1Dist) {
 			if (p1Dist > Ops.epsilon & p1Dist < Ops.infinity){
-				return new Hit(p1Dist, norm);
+				return new Hit(p1Dist, norm1);
 			}
 			return null;
 		} else{
-			norm = p.sub(this.center).normalize();
 			if (pDist > Ops.epsilon & pDist < Ops.infinity){
-				return new Hit(pDist, norm);
+				return new Hit(pDist, norm2);
 			}
 			return null;
 		}
