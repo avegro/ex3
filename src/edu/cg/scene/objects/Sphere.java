@@ -45,13 +45,16 @@ public class Sphere extends Shape {
 		double tempT, t;
 		double discriminant = Math.pow(b,2) -(4*a*c);
 		if( discriminant < 0){
-			// if discriminant is <0 then the ray does not intersect the sphere.
+			// If discriminant is <0 then the ray does not intersect the sphere.
 			return null;
 		}
 		else{
-			// otherwise, we find the smallest positive solution to get the nearest intersection point.
+			// Otherwise, we find the smallest positive solution to get the nearest intersection point.
 			tempT = (-b - Math.sqrt(discriminant))/ 2*a;
 			t = (tempT < 0)? (-b + Math.sqrt(discriminant))/2*a : tempT;
+			// Find the point on the sphere where the ray intersects.
+			// The vector that is normal to the surface will be in the direction of the ray
+			// from the center of the sphere through that point.
 			Point intersectionPoint = ray.add(t);
 			Vec normal = intersectionPoint.sub(center).normalize();
 			return new Hit(t,normal);

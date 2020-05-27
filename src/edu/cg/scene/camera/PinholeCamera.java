@@ -2,12 +2,21 @@ package edu.cg.scene.camera;
 
 import edu.cg.UnimplementedMethodException;
 import edu.cg.algebra.Point;
+import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
 
 public class PinholeCamera {
-	private transient int height = 200;
-	private transient int width = 200;
-	private transient double viewAngle = 90;
+	private int height;
+	private int width;
+	private double viewAngle;
+	private Point cameraPosition;
+	private Vec towardsVec;
+	private Vec upVec;
+	private Vec rightVec;
+	private double distanceToPlain;
+	private double pixelWidth;
+	private double plainWidth;
+
 
 	/**
 	 * Initializes a pinhole camera model with default resolution 200X200 (RxXRy)
@@ -22,7 +31,12 @@ public class PinholeCamera {
 	 * 
 	 */
 	public PinholeCamera(Point cameraPosition, Vec towardsVec, Vec upVec, double distanceToPlain) {
-		// TODO: Initialize your fields
+		this.cameraPosition = cameraPosition;
+		this.towardsVec = towardsVec.normalize();
+		this.upVec = upVec.normalize();
+		this.distanceToPlain = distanceToPlain;
+		initResolution(200,200,90);
+
 	}
 
 	/**
@@ -36,6 +50,8 @@ public class PinholeCamera {
 		this.height = height;
 		this.width = width;
 		this.viewAngle = viewAngle;
+		this.plainWidth = Math.tan(Math.toRadians(viewAngle/2)) * distanceToPlain * 2;
+		this.pixelWidth = plainWidth/width;
 	}
 
 	/**
@@ -47,9 +63,26 @@ public class PinholeCamera {
 	 * @return the middle point of the pixel (x,y) in the model coordinates.
 	 */
 	public Point transform(int x, int y) {
-		// TODO: implement this method.
-		throw new UnimplementedMethodException("PinholeCamera.transform is not implemented.");
+		// We add 0.5 because we will pass the ray through the center of each pixel.
+		try{
+			double finalX = ((double)x+0.5)/width;
+			double finalY = ((double)y+0.5)/height;
+			double newX = 2 * finalX - 1;
+			double newY = 1 - 2 * finalY;
+			double aspectRatio = width/height;
+			finalX = newX * aspectRatio;
+			finalY = newY;
+			Ray initalRay = new Ray(cameraPosition, towardsVec);
+			Point centerPoint = initalRay.add(distanceToPlain);
+			double z = centerPoint.z;
+			return new Point(finalX, finalY, z);
+		}
+		catch(Exception e){
+			throw new RuntimeException("Function failed: PinholeCamera/transform  ");
+		}
 	}
+
+
 
 	/**
 	 * Returns the camera position
@@ -57,7 +90,10 @@ public class PinholeCamera {
 	 * @return a new point representing the camera position.
 	 */
 	public Point getCameraPosition() {
-		// TODO: implement this method.
-		throw new UnimplementedMethodException("PinholeCamera.getCameraPosition");
+
+		try {return new Point(0,0,0); }
+		catch(Exception e){
+			throw new RuntimeException("camera position failed");
+		}
 	}
 }

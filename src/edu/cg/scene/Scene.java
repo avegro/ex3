@@ -114,7 +114,7 @@ public class Scene {
 
 	private void initSomeFields(int imgWidth, int imgHeight, Logger logger) {
 		this.logger = logger;
-		// TODO: initialize your additional field here.
+			// TODO: initialize your additional field here.
 	}
 
 	public BufferedImage render(int imgWidth, int imgHeight, double viewAngle, Logger logger)
@@ -136,8 +136,10 @@ public class Scene {
 				+ " rays over " + name);
 
 		for (int y = 0; y < imgHeight; ++y)
-			for (int x = 0; x < imgWidth; ++x)
+			for (int x = 0; x < imgWidth; ++x) {
 				futures[y][x] = calcColor(x, y);
+				System.out.println();
+			}
 
 		this.logger.log("Done shooting rays.");
 		this.logger.log("Wating for results...");
@@ -171,36 +173,36 @@ public class Scene {
 	}
 
 	private Vec calcColor(Ray ray, int recursionLevel) {
-        Vec recReflect = new  Vec(0, 0, 0);
+		Vec recReflect = new  Vec(0, 0, 0);
 		Hit surfHit;
 		Hit hit = null;
 		Surface resultSurface;
 		Vec pNormal, lSum;
 		Point p;
+		System.out.print("given recursion level: " + recursionLevel + "  ");
 		// First, we find the surface (location where the ray hits the nearest object)
 		// so that we can determine color based on the material, location etc.
 		for(Surface surf: this.surfaces){
 			surfHit = surf.intersect(ray);
 			if(surfHit != null){
 				surfHit.setSurface(surf);
-				if(surfHit.compareTo(hit) < 0) hit = surfHit;
 			}
 			if(hit == null) hit = surfHit;
+			if(surfHit != null && surfHit.compareTo(hit) < 0) hit = surfHit;
 		}
 		// Now we know what point and surface we're working with,
-        // so we define variables for the point we are getting the color from,
-        // the vector which is normal to the surface, and of course the surface we are working with.
-        // We also start the sum for the light intensity formula.
+		// so we define variables for the point we are getting the color from,
+		// the vector which is normal to the surface, and of course the surface we are working with.
+		// We also start the sum for the light intensity formula.
 		resultSurface = hit.getSurface();
 		pNormal = hit.getNormalToSurface();
 		p = ray.getHittingPoint(hit);
 		Vec normToSurf = hit.getNormalToSurface();
 		lSum = ambient.mult(resultSurface.Ka());
-
 		//diffuse and specular calculations, shadows considered (using sj scalar).
 		double sj = 1;
 		// Iterate over every light source and check if it's blocked. If it is, we will
-        // multiply the relevant diffuse/specular term by 0 as the light is not getting through.
+		// multiply the relevant diffuse/specular term by 0 as the light is not getting through.
 		for(Light light: this.lightSources){
 			Ray toLight = light.rayToLight(p);
 			Vec lHat = Ops.reflect(toLight.direction(), normToSurf);
@@ -208,19 +210,20 @@ public class Scene {
 				sj = (light.isOccludedBy(s,toLight)) ? 0: 1;
 				if(sj == 0) break;
 			}
-            // Follow intensity formula
+			// Follow intensity formula
 			Vec intense = light.intensity(p,toLight);
 			lSum = lSum.add((((resultSurface.Kd()).mult(intense)).mult(normToSurf.dot(toLight.direction())).add(((resultSurface.Ks()).mult(intense)).mult(ray.direction().neg().dot(lHat)))).mult(sj));
 
 		}
+		if(recursionLevel>0) System.out.println("Finished light calculations, checking depth: " + recursionLevel);
 		// Check if we have reached maximum depth.
 		// If not, move the ray forward by an extremely small amount and continue with the recursion.
-        if(recursionLevel > 0){
-            Ray nextRay = new Ray(p.add(new Vec(0.00001)), Ops.reflect(ray.direction(),pNormal));
-            recReflect = calcColor(nextRay, --recursionLevel);
-        }
-        // Calculate sum and return appropriate color.
+		if(recursionLevel > 0){
+			Ray nextRay = new Ray(p.add(new Vec(0.00001)), Ops.reflect(ray.direction(),pNormal));
+			recReflect = calcColor(nextRay, --recursionLevel);
+		}
+		// Calculate sum and return appropriate color.
 		lSum = lSum.add(recReflect.mult(hit.getSurface().reflectionIntensity()));
-	    return lSum;
+		return lSum;
 	}
 }
