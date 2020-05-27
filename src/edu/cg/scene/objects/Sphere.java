@@ -1,10 +1,7 @@
 package edu.cg.scene.objects;
 
 import edu.cg.UnimplementedMethodException;
-import edu.cg.algebra.Hit;
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Ray;
-import edu.cg.algebra.Vec;
+import edu.cg.algebra.*;
 
 public class Sphere extends Shape {
 	private Point center;
@@ -39,25 +36,40 @@ public class Sphere extends Shape {
 	
 	@Override
 	public Hit intersect(Ray ray) {
-		double a = ray.direction().dot(ray.direction());
-		double b = 2 * (ray.direction().dot(ray.source().sub(center)));
-		double c = (ray.source().sub(center).dot(ray.source().sub(center))) - Math.pow(radius,2);
-		double tempT, t;
-		double discriminant = Math.pow(b,2) -(4*a*c);
-		if( discriminant < 0){
-			// If discriminant is <0 then the ray does not intersect the sphere.
+		Vec normalizeDir = ray.direction().normalize();
+		Vec L = this.center.sub(ray.source());
+		// check direction for relevance/ if we can disregard because it doesn't intersect for sure
+		if (L.dot(normalizeDir) < 0) {
 			return null;
 		}
-		else{
-			// Otherwise, we find the smallest positive solution to get the nearest intersection point.
-			tempT = (-b - Math.sqrt(discriminant))/ 2*a;
-			t = (tempT < 0)? (-b + Math.sqrt(discriminant))/2*a : tempT;
-			// Find the point on the sphere where the ray intersects.
-			// The vector that is normal to the surface will be in the direction of the ray
-			// from the center of the sphere through that point.
-			Point intersectionPoint = ray.add(t);
-			Vec normal = intersectionPoint.sub(center).normalize();
-			return new Hit(t,normal);
+		double d = Math.sqrt(Math.pow(L.length(),2) - (Math.pow(L.dot(normalizeDir), 2)));
+		if (d > this.radius) {
+			return null;
+
+		}
+		// if it intersects, we use trigonometric functions to calculate intersection points with the sphere
+		double adj = L.dot(normalizeDir);
+		double hyp = Math.sqrt((Math.pow(this.radius, 2)) - (Math.pow(d,2)));
+		double t0 = adj - hyp, t1 = adj + hyp;
+		// now that we've calculated the two t values, we find the points on the sphere itself that are intersected with:
+		Point p = ray.source().add(normalizeDir.mult(t0));
+		Point p1 = ray.source().add(normalizeDir.mult(t1));
+		Vec norm = p1.sub(this.center).normalize();
+		// we calculate the nearest intersection by intersection distances
+		double pDist = p.sub(ray.source()).length();
+		double p1Dist = p1.sub(ray.source()).length();
+		// we check to avoid double calculation/errors
+		if (pDist > p1Dist) {
+			if (p1Dist > Ops.epsilon & p1Dist < Ops.infinity){
+				return new Hit(p1Dist, norm);
+			}
+			return null;
+		} else{
+			norm = p.sub(this.center).normalize();
+			if (pDist > Ops.epsilon & pDist < Ops.infinity){
+				return new Hit(pDist, norm);
+			}
+			return null;
 		}
 
 

@@ -229,9 +229,9 @@ public class Scene {
 		}
 		// Check if we have reached maximum depth.
 		// If not, move the ray forward by an extremely small amount and continue with the recursion.
-		if(recursionLevel < this.maxRecursionLevel && this.renderReflections){
-			Ray nextRay = new Ray(p.add(new Vec(0.00001)), Ops.reflect(ray.direction(),pNormal));
-			recReflect = calcColor(nextRay, ++recursionLevel);
+		if(++recursionLevel < this.maxRecursionLevel && this.renderReflections){
+			Ray nextRay = new Ray(p, Ops.reflect(ray.direction(),pNormal));
+			recReflect = calcColor(nextRay, recursionLevel);
 		}
 		// Calculate sum and return appropriate color.
 		lSum = lSum.add(recReflect.mult(hit.getSurface().reflectionIntensity()));
