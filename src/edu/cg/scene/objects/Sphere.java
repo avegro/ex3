@@ -4,6 +4,7 @@ import edu.cg.UnimplementedMethodException;
 import edu.cg.algebra.Hit;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
+import edu.cg.algebra.Vec;
 
 public class Sphere extends Shape {
 	private Point center;
@@ -38,7 +39,22 @@ public class Sphere extends Shape {
 	
 	@Override
 	public Hit intersect(Ray ray) {
-		//TODO: implement this method.
-		throw new UnimplementedMethodException("intersect(Ray)");
+		double a = ray.direction().dot(ray.direction());
+		double b = 2 * (ray.direction().dot(ray.source().sub(center)));
+		double c = (ray.source().sub(center).dot(ray.source().sub(center))) - Math.pow(radius,2);
+		double tempT, t;
+		double discriminant = Math.pow(b,2) -(4*a*c);
+		if( discriminant < 0){
+			return null;
+		}
+		else{
+			tempT = (-b - Math.sqrt(discriminant))/ 2*a;
+			t = (tempT < 0)? (-b + Math.sqrt(discriminant))/2*a : tempT;
+			Point intersectionPoint = ray.add(t);
+			Vec normal = intersectionPoint.sub(center).normalize();
+			return new Hit(t,normal);
+		}
+
+
 	}
 }
