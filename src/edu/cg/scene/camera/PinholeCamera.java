@@ -65,17 +65,12 @@ public class PinholeCamera {
 	public Point transform(int x, int y) {
 		// We add 0.5 because we will pass the ray through the center of each pixel.
 		try{
-			double finalX = ((double)x+0.5)/width;
-			double finalY = ((double)y+0.5)/height;
-			double newX = 2 * finalX - 1;
-			double newY = 1 - 2 * finalY;
-			double aspectRatio = width/height;
-			finalX = newX * aspectRatio;
-			finalY = newY;
-			Ray initalRay = new Ray(cameraPosition, towardsVec);
-			Point centerPoint = initalRay.add(distanceToPlain);
-			double z = centerPoint.z;
-			return new Point(finalX, finalY, z);
+			Point center = cameraPosition.add(towardsVec.mult(distanceToPlain));
+			Vec vRight = towardsVec.cross(upVec).normalize();
+			Vec notUp = vRight.cross(towardsVec).normalize();
+			Point point = center.add(vRight.mult((x - Math.floor(width/2.0))*pixelWidth)).add(upVec.mult(((0.0 - y) + Math.floor(height/2.0))*pixelWidth));
+
+			return point;
 		}
 		catch(Exception e){
 			throw new RuntimeException("Function failed: PinholeCamera/transform  ");
@@ -91,9 +86,6 @@ public class PinholeCamera {
 	 */
 	public Point getCameraPosition() {
 
-		try {return new Point(0,0,0); }
-		catch(Exception e){
-			throw new RuntimeException("camera position failed");
-		}
+		return new Point(cameraPosition.x, cameraPosition.y, cameraPosition.z);
 	}
 }

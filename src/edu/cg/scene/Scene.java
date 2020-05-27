@@ -179,7 +179,6 @@ public class Scene {
 		Surface resultSurface;
 		Vec pNormal, lSum;
 		Point p;
-		System.out.print("given recursion level: " + recursionLevel + "  ");
 		// First, we find the surface (location where the ray hits the nearest object)
 		// so that we can determine color based on the material, location etc.
 		for(Surface surf: this.surfaces){
@@ -190,6 +189,7 @@ public class Scene {
 			if(hit == null) hit = surfHit;
 			if(surfHit != null && surfHit.compareTo(hit) < 0) hit = surfHit;
 		}
+		if(hit == null) return backgroundColor;
 		// Now we know what point and surface we're working with,
 		// so we define variables for the point we are getting the color from,
 		// the vector which is normal to the surface, and of course the surface we are working with.
@@ -212,15 +212,26 @@ public class Scene {
 			}
 			// Follow intensity formula
 			Vec intense = light.intensity(p,toLight);
-			lSum = lSum.add((((resultSurface.Kd()).mult(intense)).mult(normToSurf.dot(toLight.direction())).add(((resultSurface.Ks()).mult(intense)).mult(ray.direction().neg().dot(lHat)))).mult(sj));
+			double vTimesLHat = ray.direction().neg().dot(lHat);
+			vTimesLHat = Math.max(vTimesLHat,0);
+			double shiny = Math.pow(vTimesLHat, resultSurface.shininess());
+			double NdotLj = normToSurf.dot(toLight.direction());
+			NdotLj = Math.max(NdotLj, 0);
+			// diffuse aspect
+			Vec diff = (resultSurface.Kd().mult(intense)).mult(NdotLj);
+			// specular aspect
+			Vec spec = (resultSurface.Ks().mult(intense)).mult(shiny);
+
+			Vec diffPlusSpec = diff.add(spec);
+
+			lSum = lSum.add(diffPlusSpec.mult(sj));
 
 		}
-		if(recursionLevel>0) System.out.println("Finished light calculations, checking depth: " + recursionLevel);
 		// Check if we have reached maximum depth.
 		// If not, move the ray forward by an extremely small amount and continue with the recursion.
-		if(recursionLevel > 0){
+		if(recursionLevel < this.maxRecursionLevel && this.renderReflections){
 			Ray nextRay = new Ray(p.add(new Vec(0.00001)), Ops.reflect(ray.direction(),pNormal));
-			recReflect = calcColor(nextRay, --recursionLevel);
+			recReflect = calcColor(nextRay, ++recursionLevel);
 		}
 		// Calculate sum and return appropriate color.
 		lSum = lSum.add(recReflect.mult(hit.getSurface().reflectionIntensity()));
