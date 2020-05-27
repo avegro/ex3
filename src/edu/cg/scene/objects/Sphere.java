@@ -45,9 +45,11 @@ public class Sphere extends Shape {
 		double tempT, t;
 		double discriminant = Math.pow(b,2) -(4*a*c);
 		if( discriminant < 0){
+			// if discriminant is <0 then the ray does not intersect the sphere.
 			return null;
 		}
 		else{
+			// otherwise, we find the smallest positive solution to get the nearest intersection point.
 			tempT = (-b - Math.sqrt(discriminant))/ 2*a;
 			t = (tempT < 0)? (-b + Math.sqrt(discriminant))/2*a : tempT;
 			Point intersectionPoint = ray.add(t);
